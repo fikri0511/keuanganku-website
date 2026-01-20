@@ -22,6 +22,7 @@ export type Database = {
           id: string
           name: string
           type: string
+          user_id: string | null
         }
         Insert: {
           color: string
@@ -30,6 +31,7 @@ export type Database = {
           id?: string
           name: string
           type: string
+          user_id?: string | null
         }
         Update: {
           color?: string
@@ -38,6 +40,7 @@ export type Database = {
           id?: string
           name?: string
           type?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -51,6 +54,7 @@ export type Database = {
           id: string
           note: string | null
           type: string
+          user_id: string | null
           wallet_id: string | null
         }
         Insert: {
@@ -62,6 +66,7 @@ export type Database = {
           id?: string
           note?: string | null
           type: string
+          user_id?: string | null
           wallet_id?: string | null
         }
         Update: {
@@ -73,6 +78,7 @@ export type Database = {
           id?: string
           note?: string | null
           type?: string
+          user_id?: string | null
           wallet_id?: string | null
         }
         Relationships: [
@@ -106,6 +112,7 @@ export type Database = {
           icon: string
           id: string
           name: string
+          user_id: string | null
         }
         Insert: {
           balance?: number
@@ -113,6 +120,7 @@ export type Database = {
           icon: string
           id?: string
           name: string
+          user_id?: string | null
         }
         Update: {
           balance?: number
@@ -120,6 +128,7 @@ export type Database = {
           icon?: string
           id?: string
           name?: string
+          user_id?: string | null
         }
         Relationships: []
       }

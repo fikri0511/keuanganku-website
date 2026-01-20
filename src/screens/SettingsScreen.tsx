@@ -1,11 +1,14 @@
 import { useState } from 'react';
+import { useFinance } from '@/contexts/FinanceContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { AddWalletDialog } from '@/components/settings/AddWalletDialog';
 import { AddCategoryDialog } from '@/components/settings/AddCategoryDialog';
 import { ResetDataDialog } from '@/components/settings/ResetDataDialog';
-import { Plus, Wallet2, Tag, Trash2 } from 'lucide-react';
+import { Plus, Wallet2, Tag, Trash2, User, LogOut } from 'lucide-react';
 
 export const SettingsScreen = () => {
+  const { user, signOut } = useAuth();
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
@@ -18,6 +21,34 @@ export const SettingsScreen = () => {
       </div>
 
       <div className="space-y-6">
+        {/* User Info */}
+        <div className="bg-white rounded-3xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] overflow-hidden">
+          <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-teal/10 rounded-full flex items-center justify-center">
+                <User className="w-5 h-5 text-teal" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold">Akun</h2>
+                <p className="text-sm font-medium">{user?.user_metadata?.full_name || 'Pengguna'}</p>
+                <p className="text-xs text-warmGray truncate max-w-[150px] sm:max-w-xs">
+                  {user?.is_anonymous ? 'Tamu (Guest)' : user?.email}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="p-6">
+            <Button
+              onClick={signOut}
+              variant="outline"
+              className="w-full h-12 border-2 border-coral/30 text-coral hover:border-coral hover:bg-coral/5"
+            >
+              <LogOut className="w-5 h-5 mr-2" />
+              Keluar Aplikasi
+            </Button>
+          </div>
+        </div>
+
         {/* Wallet Management */}
         <div className="bg-white rounded-3xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] overflow-hidden">
           <div className="p-6 border-b border-gray-100">
