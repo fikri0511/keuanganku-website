@@ -10,6 +10,8 @@ interface FinanceContextType {
   transfers: Transfer[];
   isLoading: boolean;
   addWallet: (wallet: Omit<Wallet, 'id'>) => Promise<void>;
+  editWallet: (id: string, wallet: Omit<Wallet, 'id'>) => Promise<void>;
+  deleteWallet: (id: string) => Promise<void>;
   addCategory: (category: Omit<Category, 'id'>) => Promise<void>;
   addTransaction: (transaction: Omit<Transaction, 'id' | 'createdAt'>) => Promise<void>;
   editTransaction: (id: string, transaction: Omit<Transaction, 'id' | 'createdAt'>) => Promise<void>;
@@ -135,6 +137,27 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
+  const editWallet = async (id: string, wallet: Omit<Wallet, 'id'>) => {
+    const { error } = await supabase.from('wallets').update({
+      name: wallet.name,
+      icon: wallet.icon,
+      balance: wallet.balance,
+    }).eq('id', id);
+
+    if (error) {
+      console.error('Error editing wallet:', error);
+      throw error;
+    }
+  };
+
+  const deleteWallet = async (id: string) => {
+    const { error } = await supabase.from('wallets').delete().eq('id', id);
+    if (error) {
+      console.error('Error deleting wallet:', error);
+      throw error;
+    }
+  };
+
   const addCategory = async (category: Omit<Category, 'id'>) => {
     const { error } = await supabase.from('categories').insert({
       name: category.name,
@@ -249,6 +272,8 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         transfers,
         isLoading,
         addWallet,
+        editWallet,
+        deleteWallet,
         addCategory,
         addTransaction,
         editTransaction,

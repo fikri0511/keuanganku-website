@@ -2,13 +2,35 @@ import { useFinance } from '@/contexts/FinanceContext';
 import { formatCurrency, formatDateFull, getIconComponent } from '@/lib/finance-utils';
 import { motion } from 'framer-motion';
 import { groupBy } from 'lodash-es';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Transaction } from '@/types/finance';
+import { toast } from 'sonner';
 
 interface TransactionHistoryProps {
   walletId?: string;
+  onEdit?: (transaction: Transaction) => void;
 }
 
-export const TransactionHistory = ({ walletId }: TransactionHistoryProps) => {
-  const { transactions, categories, wallets } = useFinance();
+export const TransactionHistory = ({ walletId, onEdit }: TransactionHistoryProps) => {
+  const { transactions, categories, wallets, deleteTransaction } = useFinance();
+
+  const handleDelete = async (id: string) => {
+    if (confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
+      try {
+        await deleteTransaction(id);
+        toast.success('Transaksi berhasil dihapus');
+      } catch (error) {
+        toast.error('Gagal menghapus transaksi');
+      }
+    }
+  };
 
   const filteredTransactions = walletId
     ? transactions.filter((t) => t.walletId === walletId)
@@ -101,8 +123,8 @@ export const TransactionHistory = ({ walletId }: TransactionHistoryProps) => {
                         )}
                       </div>
 
-                      {/* Amount */}
-                      <div className="text-right">
+                      {/* Amount & Actions */}
+                      <div className="text-right flex items-center gap-2">
                         <p
                           className={`text-lg font-bold font-mono ${
                             transaction.type === 'income' ? 'text-mint' : 'text-coral'
@@ -111,6 +133,27 @@ export const TransactionHistory = ({ walletId }: TransactionHistoryProps) => {
                           {transaction.type === 'income' ? '+' : '-'}
                           {formatCurrency(transaction.amount).replace('Rp', '')}
                         </p>
+
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-warmGray/50 hover:text-warmGray">
+                              <MoreHorizontal className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => onEdit?.(transaction)}>
+                              <Pencil className="w-4 h-4 mr-2" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => handleDelete(transaction.id)}
+                              className="text-red-500 focus:text-red-500"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Hapus
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </div>
                   );
