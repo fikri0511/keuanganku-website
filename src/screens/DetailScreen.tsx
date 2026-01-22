@@ -18,9 +18,6 @@ export const DetailScreen = () => {
 
   const handleSheetOpenChange = (open: boolean) => {
     setIsSheetOpen(open);
-    if (!open) {
-      setTimeout(() => setEditingTransaction(null), 300);
-    }
   };
 
   const handleEditWallet = (wallet: Wallet) => {
@@ -30,9 +27,6 @@ export const DetailScreen = () => {
 
   const handleWalletSheetOpenChange = (open: boolean) => {
     setIsWalletSheetOpen(open);
-    if (!open) {
-      setTimeout(() => setEditingWallet(null), 300);
-    }
   };
 
   return (

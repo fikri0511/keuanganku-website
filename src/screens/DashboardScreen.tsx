@@ -18,11 +18,6 @@ export const DashboardScreen = () => {
 
   const handleSheetOpenChange = (open: boolean) => {
     setIsSheetOpen(open);
-    if (!open) {
-      // Delay clearing to allow animation to finish, or just clear immediately
-      // Better to clear immediately so next open is fresh if not passed
-      setTimeout(() => setEditingTransaction(null), 300);
-    }
   };
 
   return (
