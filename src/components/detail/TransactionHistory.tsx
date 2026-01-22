@@ -141,7 +141,7 @@ export const TransactionHistory = ({ walletId, onEdit }: TransactionHistoryProps
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => onEdit?.(transaction)}>
+                            <DropdownMenuItem onClick={() => setTimeout(() => onEdit?.(transaction), 100)}>
                               <Pencil className="w-4 h-4 mr-2" />
                               Edit
                             </DropdownMenuItem>
