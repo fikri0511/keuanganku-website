@@ -20,7 +20,12 @@ const AppContent = () => {
   }
 
   if (!user) {
-    return <AuthScreen />;
+    return (
+      <>
+        <AuthScreen />
+        <Toaster />
+      </>
+    );
   }
 
   const renderScreen = () => {

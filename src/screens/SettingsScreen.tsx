@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { AddWalletDialog } from '@/components/settings/AddWalletDialog';
 import { AddCategoryDialog } from '@/components/settings/AddCategoryDialog';
 import { ResetDataDialog } from '@/components/settings/ResetDataDialog';
+import { LogoutDialog } from '@/components/settings/LogoutDialog';
 import { Plus, Wallet2, Tag, Trash2, User, LogOut } from 'lucide-react';
 
 export const SettingsScreen = () => {
@@ -12,6 +13,7 @@ export const SettingsScreen = () => {
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 
   return (
     <div className="pb-20 pt-6 px-6">
@@ -39,7 +41,7 @@ export const SettingsScreen = () => {
           </div>
           <div className="p-6">
             <Button
-              onClick={signOut}
+              onClick={() => setIsLogoutDialogOpen(true)}
               variant="outline"
               className="w-full h-12 border-2 border-coral/30 text-coral hover:border-coral hover:bg-coral/5"
             >
@@ -144,6 +146,10 @@ export const SettingsScreen = () => {
       <ResetDataDialog
         open={isResetDialogOpen}
         onOpenChange={setIsResetDialogOpen}
+      />
+      <LogoutDialog
+        open={isLogoutDialogOpen}
+        onOpenChange={setIsLogoutDialogOpen}
       />
     </div>
   );
