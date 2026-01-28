@@ -37,15 +37,15 @@ export const BalanceCards = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.08 }}
-          className="bg-mint/10 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] p-4 border border-mint/20"
+          className="bg-mint/10 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] p-4 border border-mint/20 flex flex-col"
         >
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 bg-mint/20 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-mint/20 rounded-full flex items-center justify-center flex-shrink-0">
               <TrendingUp className="w-4 h-4 text-mint" />
             </div>
             <p className="text-sm text-warmGray font-medium">Pemasukan</p>
           </div>
-          <p className="text-xl font-bold font-mono text-mint">
+          <p className="text-sm font-bold font-mono text-mint break-words leading-tight">
             {formatCurrency(totalIncome)}
           </p>
         </motion.div>
@@ -54,15 +54,15 @@ export const BalanceCards = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.16 }}
-          className="bg-coral/10 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] p-4 border border-coral/20"
+          className="bg-coral/10 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] p-4 border border-coral/20 flex flex-col"
         >
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 bg-coral/20 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-coral/20 rounded-full flex items-center justify-center flex-shrink-0">
               <TrendingDown className="w-4 h-4 text-coral" />
             </div>
             <p className="text-sm text-warmGray font-medium">Pengeluaran</p>
           </div>
-          <p className="text-xl font-bold font-mono text-coral">
+          <p className="text-sm font-bold font-mono text-coral break-words leading-tight">
             {formatCurrency(totalExpense)}
           </p>
         </motion.div>
