@@ -184,7 +184,10 @@ export const AuthScreen = () => {
     <div className="min-h-screen flex items-center justify-center bg-warmCream p-4">
       <Card className="w-full max-w-md shadow-lg border-none">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-teal font-mono">KeuanganKu</CardTitle>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <img src="/vite.svg" alt="KeuanganKu Logo" className="w-12 h-12" />
+            <CardTitle className="text-3xl font-bold text-teal font-mono">KeuanganKu</CardTitle>
+          </div>
           <CardDescription>Kelola keuanganmu dengan mudah dan cepat</CardDescription>
         </CardHeader>
         <CardContent>
