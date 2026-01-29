@@ -84,11 +84,12 @@ export const RecentTransactions = ({ onEdit }: RecentTransactionsProps) => {
                 <p className="font-semibold text-charcoal truncate">
                   {category?.name || 'Unknown'}
                 </p>
-                <div className="flex items-center gap-2 text-sm text-warmGray">
-                  <span className="truncate">{wallet?.name || 'Unknown'}</span>
-                  <span>•</span>
-                  <span className="whitespace-nowrap">{formatDate(transaction.date)}</span>
-                </div>
+                <p className="text-sm text-warmGray truncate">
+                  {wallet?.name || 'Unknown'}
+                </p>
+                <p className="text-xs text-warmGray/70">
+                  {formatDate(transaction.date)}
+                </p>
                 {transaction.note && (
                   <p className="text-xs text-warmGray/70 mt-1 truncate">
                     {transaction.note}
