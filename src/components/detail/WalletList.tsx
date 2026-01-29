@@ -77,7 +77,7 @@ export const WalletList = ({ onSelectWallet, onEdit }: WalletListProps) => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => onEdit?.(wallet)}>
+                      <DropdownMenuItem onClick={() => setTimeout(() => onEdit?.(wallet), 100)}>
                         <Pencil className="w-4 h-4 mr-2" />
                         Edit
                       </DropdownMenuItem>
