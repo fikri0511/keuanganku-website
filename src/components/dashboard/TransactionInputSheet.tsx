@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { getIconComponent, formatCurrency } from '@/lib/finance-utils';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { getIconComponent, formatCurrency, formatDateOnly } from '@/lib/finance-utils';
 import { TransactionType, Transaction } from '@/types/finance';
 import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
@@ -27,6 +27,7 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
   const [note, setNote] = useState('');
   const [date, setDate] = useState<Date>(new Date());
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   useEffect(() => {
     if (initialData) {
@@ -35,7 +36,9 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
       setSelectedWalletId(initialData.walletId);
       setSelectedCategoryId(initialData.categoryId);
       setNote(initialData.note || '');
-      setDate(new Date(initialData.date));
+      // Parse the date and preserve the time from original transaction
+      const dateObj = new Date(initialData.date);
+      setDate(dateObj);
     } else {
       // Reset defaults when opening new
       if (open) {
@@ -44,9 +47,11 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
         setSelectedWalletId('');
         setSelectedCategoryId('');
         setNote('');
+        // For new transaction, set current date and time
         setDate(new Date());
       }
     }
+    setIsDatePickerOpen(false);
   }, [initialData, open]);
 
 
@@ -83,7 +88,7 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
         walletId: selectedWalletId,
         categoryId: selectedCategoryId,
         note: note || undefined,
-        date: date.toISOString(),
+        date: formatDateOnly(date),
       });
       toast.success('Transaksi berhasil diperbarui');
     } else {
@@ -93,7 +98,7 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
         walletId: selectedWalletId,
         categoryId: selectedCategoryId,
         note: note || undefined,
-        date: date.toISOString(),
+        date: formatDateOnly(date),
       });
       toast.success(`Transaksi ${type === 'income' ? 'pemasukan' : 'pengeluaran'} berhasil ditambahkan`);
     }
@@ -104,14 +109,14 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="h-[90vh] rounded-t-3xl">
+      <SheetContent side="bottom" className="h-[90vh] rounded-t-3xl flex flex-col">
         <SheetHeader className="mb-6">
           <SheetTitle className="text-2xl font-bold">
             {initialData ? 'Edit Transaksi' : 'Transaksi Baru'}
           </SheetTitle>
         </SheetHeader>
 
-        <div className="space-y-6 pb-24 overflow-y-auto max-h-[calc(90vh-120px)]">
+        <div className="flex-1 space-y-6 pb-24 overflow-y-auto">
           {/* Transaction Type Toggle */}
           <div className="grid grid-cols-2 gap-3">
             <Button
@@ -233,30 +238,6 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
             </div>
           </div>
 
-          {/* Date Picker */}
-          <div>
-            <label className="block text-sm font-semibold mb-2">Tanggal</label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal h-12"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {format(date, 'PPP', { locale: id })}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={(date) => date && setDate(date)}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-
           {/* Note */}
           <div>
             <label className="block text-sm font-semibold mb-2">Catatan (Opsional)</label>
@@ -270,8 +251,42 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
           </div>
         </div>
 
+        {/* Date Picker - Using Dialog for better compatibility */}
+        <div>
+          <label className="block text-sm font-semibold mb-2">Tanggal</label>
+          <Button
+            variant="outline"
+            className="w-full justify-start text-left font-normal h-12"
+            onClick={() => setIsDatePickerOpen(true)}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {format(date, 'PPP', { locale: id })}
+          </Button>
+        </div>
+
+        {/* Date Picker Dialog */}
+        <Dialog open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+          <DialogContent className="w-auto p-6 border-0 shadow-lg gap-0">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={(selectedDate) => {
+                if (selectedDate) {
+                  // Preserve the time from the current date when selecting a new date
+                  const newDate = new Date(selectedDate);
+                  newDate.setHours(date.getHours(), date.getMinutes(), date.getSeconds());
+                  setDate(newDate);
+                  setIsDatePickerOpen(false);
+                }
+              }}
+              disabled={(date) => false}
+              initialFocus
+            />
+          </DialogContent>
+        </Dialog>
+
         {/* Submit Button */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 bg-white border-t">
+        <div className="mt-6 p-6 bg-white border-t -mx-6 -mb-0">
           <Button
             onClick={handleSubmit}
             className={`w-full h-14 text-base font-semibold ${

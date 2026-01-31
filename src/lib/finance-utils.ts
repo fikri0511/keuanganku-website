@@ -47,10 +47,45 @@ export const formatDateShort = (dateString: string): string => {
 };
 
 export const formatDateFull = (dateString: string): string => {
-  const date = new Date(dateString);
+  // Parse the date string, assuming it's in ISO format (YYYY-MM-DD or ISO 8601)
+  let date: Date;
+  
+  if (dateString.includes('T')) {
+    // If it's an ISO 8601 string, parse it
+    date = new Date(dateString);
+  } else {
+    // If it's just YYYY-MM-DD format, parse it as local date to avoid timezone issues
+    const [year, month, day] = dateString.split('-').map(Number);
+    date = new Date(year, month - 1, day);
+  }
+  
   return new Intl.DateTimeFormat('id-ID', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   }).format(date);
+};
+
+export const formatTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(date);
+};
+
+export const formatDateOnly = (date: Date): string => {
+  // Format date with time as ISO string with Indonesia timezone offset (UTC+7)
+  // This ensures the time is saved correctly with proper timezone
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  
+  // Indonesia timezone is UTC+7
+  // Format: YYYY-MM-DDTHH:mm:ss+07:00
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}+07:00`;
 };

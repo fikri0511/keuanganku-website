@@ -1,8 +1,8 @@
 import { useFinance } from '@/contexts/FinanceContext';
-import { formatCurrency, formatDateFull, getIconComponent } from '@/lib/finance-utils';
+import { formatCurrency, formatDateFull, formatTime, getIconComponent } from '@/lib/finance-utils';
 import { motion } from 'framer-motion';
 import { groupBy } from 'lodash-es';
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Pencil, Trash2, Clock } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,7 +50,11 @@ export const TransactionHistory = ({ walletId, onEdit }: TransactionHistoryProps
   // Group transactions by date
   const groupedByDate = groupBy(filteredTransactions, (t) => {
     const date = new Date(t.date);
-    return date.toISOString().split('T')[0];
+    // Create local date string without timezone conversion
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   });
 
   const sortedDates = Object.keys(groupedByDate).sort((a, b) => 
@@ -116,6 +120,10 @@ export const TransactionHistory = ({ walletId, onEdit }: TransactionHistoryProps
                             {wallet?.name || 'Unknown'}
                           </p>
                         )}
+                        <div className="flex items-center gap-1 text-xs text-warmGray/60 mt-0.5">
+                          <Clock className="w-3 h-3 text-warmGray/50" />
+                          {formatTime(transaction.date)}
+                        </div>
                         {transaction.note && (
                           <p className="text-xs text-warmGray/70 mt-1 truncate">
                             {transaction.note}
@@ -124,15 +132,17 @@ export const TransactionHistory = ({ walletId, onEdit }: TransactionHistoryProps
                       </div>
 
                       {/* Amount & Actions */}
-                      <div className="text-right flex items-center gap-2">
-                        <p
-                          className={`text-lg font-bold font-mono ${
-                            transaction.type === 'income' ? 'text-mint' : 'text-coral'
-                          }`}
-                        >
-                          {transaction.type === 'income' ? '+' : '-'}
-                          {formatCurrency(transaction.amount).replace('Rp', '')}
-                        </p>
+                      <div className="flex items-center gap-2">
+                        <div className="text-right">
+                          <p
+                            className={`text-lg font-bold font-mono ${
+                              transaction.type === 'income' ? 'text-mint' : 'text-coral'
+                            }`}
+                          >
+                            {transaction.type === 'income' ? '+' : '-'}
+                            {formatCurrency(transaction.amount).replace('Rp', '')}
+                          </p>
+                        </div>
 
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
