@@ -55,34 +55,31 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
       if (categoriesError) console.error('Error fetching categories:', categoriesError);
 
-      // Fetch Transactions
-      const { data: transactionsData, error: transactionsError } = await supabase
-        .from('transactions')
-        .select('*')
-        .order('date', { ascending: false });
+      // Fetch Transactions via Edge Function
+      const { data: feedData, error: feedError } = await supabase.functions.invoke('supabase-functions-transaction-feed');
 
-      if (transactionsData) {
+      if (feedData) {
         const txs: Transaction[] = [];
         const trs: Transfer[] = [];
 
-        transactionsData.forEach((t) => {
+        feedData.forEach((t: any) => {
           if (t.type === 'transfer') {
             trs.push({
-              id: t.id,
+              id: t.transaction_id,
               amount: t.amount,
-              sourceWalletId: t.wallet_id,
-              destinationWalletId: t.destination_wallet_id!,
+              sourceWalletId: t.wallet?.id,
+              destinationWalletId: t.destination_wallet?.id,
               note: t.note || undefined,
               date: t.date,
               createdAt: t.created_at,
             });
           } else {
             txs.push({
-              id: t.id,
+              id: t.transaction_id,
               type: t.type as 'income' | 'expense',
               amount: t.amount,
-              walletId: t.wallet_id,
-              categoryId: t.category_id!,
+              walletId: t.wallet?.id,
+              categoryId: t.category?.id,
               note: t.note || undefined,
               date: t.date,
               createdAt: t.created_at,
@@ -93,7 +90,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setTransactions(txs);
         setTransfers(trs);
       }
-      if (transactionsError) console.error('Error fetching transactions:', transactionsError);
+      if (feedError) console.error('Error fetching transactions feed:', feedError);
 
     } catch (error) {
       console.error('Unexpected error fetching data:', error);
