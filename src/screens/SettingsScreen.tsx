@@ -6,7 +6,8 @@ import { AddWalletDialog } from '@/components/settings/AddWalletDialog';
 import { AddCategoryDialog } from '@/components/settings/AddCategoryDialog';
 import { ResetDataDialog } from '@/components/settings/ResetDataDialog';
 import { LogoutDialog } from '@/components/settings/LogoutDialog';
-import { Plus, Wallet2, Tag, Trash2, User, LogOut } from 'lucide-react';
+import { Plus, Wallet2, Tag, Trash2, User, LogOut, Copy } from 'lucide-react';
+import { toast } from 'sonner';
 
 export const SettingsScreen = () => {
   const { user, signOut } = useAuth();
@@ -14,6 +15,13 @@ export const SettingsScreen = () => {
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+
+  const copyUserId = () => {
+    if (user?.id) {
+      navigator.clipboard.writeText(user.id);
+      toast.success("ID Pengguna disalin!");
+    }
+  };
 
   return (
     <div className="pb-20 pt-6 px-6">
@@ -36,6 +44,14 @@ export const SettingsScreen = () => {
                 <p className="text-xs text-warmGray truncate max-w-[150px] sm:max-w-xs">
                   {user?.is_anonymous ? 'Tamu (Guest)' : user?.email}
                 </p>
+                {!user?.is_anonymous && (
+                  <div className="flex items-center gap-2 mt-1 clickable" onClick={copyUserId}>
+                    <p className="text-[10px] font-mono text-warmGray/50 bg-gray-50 px-1 rounded truncate max-w-[120px]">
+                      ID: {user?.id}
+                    </p>
+                    <Copy className="w-3 h-3 text-warmGray/50" />
+                  </div>
+                )}
               </div>
             </div>
           </div>
