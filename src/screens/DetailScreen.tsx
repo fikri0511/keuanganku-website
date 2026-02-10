@@ -51,5 +51,7 @@ export const DetailScreen = () => {
         initialData={editingWallet}
       />
     </div>
+
+    //tambahkan komentar
   );
 };
