@@ -248,7 +248,6 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
               className="resize-none"
               rows={3}
             />
-          </div>
         </div>
 
         {/* Date Picker - Using Dialog for better compatibility */}
@@ -262,6 +261,7 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
             <CalendarIcon className="mr-2 h-4 w-4" />
             {format(date, 'PPP', { locale: id })}
           </Button>
+          </div>
         </div>
 
         {/* Date Picker Dialog */}
