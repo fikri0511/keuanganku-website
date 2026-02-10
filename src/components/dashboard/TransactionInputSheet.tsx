@@ -109,7 +109,7 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="h-[90vh] rounded-t-3xl flex flex-col">
+      <SheetContent side="bottom" className="h-[90vh] rounded-t-3xl flex flex-col pb-0">
         <SheetHeader className="mb-6">
           <SheetTitle className="text-2xl font-bold">
             {initialData ? 'Edit Transaksi' : 'Transaksi Baru'}
@@ -286,7 +286,7 @@ export const TransactionInputSheet = ({ open, onOpenChange, initialData }: Trans
         </Dialog>
 
         {/* Submit Button */}
-        <div className="mt-6 p-6 bg-white border-t -mx-6 -mb-0">
+        <div className="p-6 bg-white border-t -mx-6 -mb-0">
           <Button
             onClick={handleSubmit}
             className={`w-full h-14 text-base font-semibold ${
