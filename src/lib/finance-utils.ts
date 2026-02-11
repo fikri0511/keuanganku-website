@@ -1,8 +1,26 @@
 import * as LucideIcons from 'lucide-react';
 
 export const getIconComponent = (iconName: string) => {
-  const Icon = (LucideIcons as any)[iconName];
-  return Icon || LucideIcons.CircleDot;
+  // Case-insensitive icon lookup
+  const icons = LucideIcons as any;
+  const iconKeys = Object.keys(icons);
+  
+  // Try exact match first
+  if (icons[iconName]) {
+    return icons[iconName];
+  }
+  
+  // Try case-insensitive match
+  const matchedKey = iconKeys.find(
+    key => key.toLowerCase() === iconName.toLowerCase()
+  );
+  
+  if (matchedKey && icons[matchedKey]) {
+    return icons[matchedKey];
+  }
+  
+  // Return default icon if not found
+  return LucideIcons.CircleDot;
 };
 
 export const formatCurrency = (amount: number): string => {
